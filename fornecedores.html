@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fornecedores - Frivaca</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* Ajustes visuais da tela de fornecedores */
+    :root {
+      --egator-bg: #F8FAFC;
+      --egator-card-bg: #FFFFFF;
+      --egator-text-dark: #1E293B;
+      --egator-text-muted: #64748B;
+      --egator-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+      --egator-border-radius: 20px;
+    }
+
+    body { background-color: var(--egator-bg); }
+    [hidden] { display: none !important; }
+
+    svg, .icon {
+      width: 20px !important; height: 20px !important;
+      max-width: 20px !important; max-height: 20px !important;
+      flex-shrink: 0; fill: none; stroke: currentColor;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* Layout base */
+    .sidebar { background-color: var(--egator-card-bg); border-right: none; box-shadow: 2px 0 20px rgba(0,0,0,0.02); }
+    .sidebar__brand { display: flex; align-items: center; justify-content: center; height: 90px; padding: 10px 20px; border-bottom: 1px solid #F1F5F9; }
+    .sidebar__brand img { max-height: 65px; object-fit: contain; }
+    .nav-link { color: var(--color-primary-dark); border-radius: 12px; margin-bottom: 4px; }
+    .nav-link.is-active { background-color: var(--color-accent); font-weight: 700; }
+    .sidebar__footer { border-top: none; padding: 20px; }
+    .btn-logout-sidebar { display: flex; align-items: center; gap: 12px; color: var(--egator-text-muted); font-weight: 500; width: 100%; padding: 12px; border-radius: 12px; transition: all 0.2s; }
+    .btn-logout-sidebar:hover { background-color: var(--color-danger-soft); color: var(--color-danger); }
+
+    .header { background-color: transparent; border-bottom: none; box-shadow: none; z-index: 1000; }
+    .search { position: relative; width: 100%; max-width: 400px; }
+    .search .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--egator-text-muted); pointer-events: none; }
+    .search .form-control { background-color: var(--egator-card-bg); border: 1px solid #E2E8F0; border-radius: 12px; width: 100%; height: 44px; padding-left: 42px; }
+
+    .user-menu { position: relative; display: flex; align-items: center; }
+    .header__user { display: flex; align-items: center; gap: 12px; background: none; border: none; cursor: pointer; }
+    .avatar { display: inline-flex; align-items: center; justify-content: center; width: 42px !important; height: 42px !important; font-size: 1rem; font-weight: 700; border-radius: 50%; flex-shrink: 0; }
+    .dropdown { position: absolute; top: calc(100% + 10px); right: 0; min-width: 200px; background-color: var(--egator-card-bg); border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 8px; z-index: 1001; }
+    .dropdown__item { display: flex; align-items: center; width: 100%; padding: 12px 16px; font-size: 0.9rem; font-weight: 500; color: var(--egator-text-dark); border-radius: 8px; text-align: left; transition: background-color 0.2s; }
+    .dropdown__item:hover { background-color: #F8FAFC; }
+    .dropdown__item--danger { color: var(--color-danger); }
+    .dropdown__item--danger:hover { background-color: var(--color-danger-soft); }
+    .dropdown__divider { height: 1px; margin: 8px 0; background-color: #E2E8F0; }
+
+    /* Conteudo */
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+
+    .table-egator { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .table-egator th { text-align: left; padding: 16px 24px; color: var(--egator-text-muted); font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #F1F5F9; background-color: var(--egator-card-bg); }
+    .table-egator td { padding: 16px 24px; font-size: 0.9rem; color: var(--egator-text-dark); border-bottom: 1px solid #F1F5F9; vertical-align: middle; }
+    .table-egator tr:last-child td { border-bottom: none; }
+    .table-egator tr:hover { background-color: #F8FAFC; }
+    
+    .table-egator .text-right { text-align: right; }
+    .table-egator td.nome { font-weight: 600; }
+    .table-egator td.actions .btn + .btn { margin-left: 8px; }
+    .btn-excluir { color: var(--color-danger-text); }
+    .btn-excluir:hover { background-color: var(--color-danger-soft); }
+
+    body.modal-open { overflow: hidden; }
+  </style>
+
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script> <!-- ui.js depois do auth -->
+  <script src="dados.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/fornecedores.js"></script>
+</head>
+<body>
+
+  <div class="app-container" id="app">
+
+    <aside class="sidebar" id="sidebar">
+      <a class="sidebar__brand" href="index.html"><img src="assets/logofrivaca.png" alt="Frivaca"></a>
+      <nav class="sidebar__nav">
+        <ul>
+          <li><a class="nav-link" href="index.html"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard</a></li>
+          <li><a class="nav-link" href="produtos.html"><svg class="icon" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3.3 7.5L12 12.5l8.7-5"/><path d="M12 22V12.5"/></svg> Produtos</a></li>
+          <li><a class="nav-link" href="estoque.html"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2l10 5-10 5L2 7l10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Estoque</a></li>
+          <li><a class="nav-link" href="pedidos.html"><svg class="icon" viewBox="0 0 24 24"><path d="M9 4h6a1 1 0 011 1v1H8V5a1 1 0 011-1z"/><path d="M8 6H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-2"/><path d="M9 13h6M9 17h4"/></svg> Pedidos</a></li>
+          <li><a class="nav-link is-active" href="fornecedores.html"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Fornecedores</a></li>
+          <li><a class="nav-link" href="simulador.html"><svg class="icon" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg> Simulador</a></li>
+          <li><a class="nav-link" href="cenarios.html"><svg class="icon" viewBox="0 0 24 24"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg> Cenários</a></li>
+          <li><a class="nav-link" href="relatorios.html"><svg class="icon" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg> Relatórios</a></li>
+          <li><a class="nav-link" href="configuracoes.html"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg> Configurações</a></li>
+        </ul>
+      </nav>
+      <div class="sidebar__footer">
+        <button class="btn-logout-sidebar" id="btn-logout-sidebar"><svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <header class="header">
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menu"><span class="menu-toggle__bars"></span></button>
+      
+      <div class="search">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input class="form-control" type="search" placeholder="Buscar produtos, pedidos ou fornecedores">
+      </div>
+
+      <div class="header__actions">
+        <!-- Botao de tema (ui.js identifica pelo aria-label) -->
+        <button style="color: var(--egator-text-muted); padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" aria-label="Alternar Tema">
+           <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        
+        <div class="user-menu">
+          <button class="header__user" id="user-menu-btn" type="button">
+            <div style="text-align: right; margin-right: 8px;">
+              <div id="user-name" style="font-weight: 600; color: var(--egator-text-dark); font-size: 0.9rem; line-height: 1.2;">Admin</div>
+              <div style="font-size: 0.75rem; color: var(--egator-text-muted);">Admin</div>
+            </div>
+            <span class="avatar" id="user-avatar" style="background-color: var(--color-primary-dark); color: white;">A</span>
+          </button>
+
+          <div class="dropdown" id="user-menu" role="menu" hidden>
+            <a class="dropdown__item" href="configuracoes.html">Configurações</a>
+            <div class="dropdown__divider"></div>
+            <button class="dropdown__item dropdown__item--danger" id="btn-logout" type="button">Sair</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1 style="font-family: var(--font-display); font-weight: 400; font-size: 2.5rem; color: var(--color-primary-dark); margin-bottom: 4px;">Fornecedores</h1>
+          <p id="subtitulo-lista" style="color: var(--egator-text-muted); font-size: 0.95rem;">Fornecedores cadastrados.</p>
+        </div>
+        <button class="btn btn--primary" id="btn-novo-fornecedor" type="button" style="background-color: var(--color-accent); color: var(--color-primary-dark); font-weight: 700; border-radius: 12px; padding: 12px 24px;">Novo Fornecedor</button>
+      </div>
+
+      <div class="egator-card" style="background: var(--egator-card-bg); border-radius: 20px; box-shadow: var(--egator-shadow); padding: 0; overflow: hidden;">
+        <div style="overflow-x: auto; width: 100%;">
+          <table class="table-egator">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>CNPJ</th>
+                <th>Contato</th>
+                <th class="text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-fornecedores"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Modal: Cadastro -->
+  <div class="modal-overlay" id="modal-fornecedor">
+    <form class="modal" id="form-fornecedor" role="dialog">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-fornecedor-titulo">Novo fornecedor</h2>
+        <button class="modal__close" type="button" data-fechar>×</button>
+      </div>
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-label" for="fornecedor-nome">Nome</label>
+          <input class="form-control" id="fornecedor-nome" name="nome" type="text" required maxlength="120">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fornecedor-cnpj">CNPJ</label>
+          <input class="form-control form-control--mono" id="fornecedor-cnpj" name="cnpj" type="text" maxlength="18" placeholder="00.000.000/0000-00">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fornecedor-contato">Contato</label>
+          <input class="form-control" id="fornecedor-contato" name="contato" type="text" maxlength="120" placeholder="Telefone ou e-mail">
+        </div>
+        <p class="form-error" id="erro-fornecedor" hidden></p>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" type="button" data-fechar>Cancelar</button>
+        <button class="btn btn--primary" type="submit">Salvar fornecedor</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal: Excluir -->
+  <div class="modal-overlay" id="modal-excluir">
+    <div class="modal modal--sm modal--danger" role="alertdialog">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-excluir-titulo">Excluir fornecedor</h2>
+        <button class="modal__close" type="button" data-fechar>×</button>
+      </div>
+      <div class="modal__body">
+        <p id="excluir-mensagem"></p>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" type="button" id="btn-cancelar-excluir" data-fechar>Cancelar</button>
+        <button class="btn btn--danger" type="button" id="btn-confirmar-excluir">Excluir fornecedor</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
