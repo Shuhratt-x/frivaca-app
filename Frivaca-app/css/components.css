@@ -1,0 +1,540 @@
+/* components.css - estilos dos botoes, cards, tabelas, modais etc */
+
+/* Utilidades */
+.num, .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.text-secondary { color: var(--color-text-secondary); }
+.text-danger { color: var(--color-danger); }
+.text-right { text-align: right; }
+
+/* --- Cards --- */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-primary-dark);
+}
+
+.card__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.card__footer {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.card--flush { padding: 0; overflow: hidden; }
+.card--flush .card__header { padding: var(--space-5) var(--space-5) 0; }
+
+/* Cards de numeros (Dashboard) */
+.stat-card { display: flex; flex-direction: column; gap: var(--space-2); }
+.stat-card__label { font-size: var(--text-sm); font-weight: 500; color: var(--color-text-secondary); }
+.stat-card__value {
+  font-family: var(--font-mono);
+  font-size: clamp(1.25rem, 4vw, var(--text-2xl));
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--color-primary-dark);
+  overflow-wrap: anywhere;
+}
+.stat-card__meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-secondary); }
+.stat-card--accent { border-left: 4px solid var(--color-accent); }
+.stat-card--danger { border-left: 4px solid var(--color-danger); }
+.stat-card--danger .stat-card__value { color: var(--color-danger); }
+
+/* --- Botoes --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 42px;
+  padding: 0 var(--space-5);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: 0.5; pointer-events: none; }
+.btn svg { width: 18px; height: 18px; }
+
+.btn--primary { background-color: var(--color-accent); color: var(--color-primary-dark); }
+.btn--primary:hover { background-color: var(--color-accent-hover); }
+.btn--primary:focus-visible { outline: 2px solid var(--color-primary-dark); outline-offset: 2px; box-shadow: none; }
+
+.btn--secondary { background-color: var(--color-surface); color: var(--color-primary-dark); border-color: var(--color-border-strong); }
+.btn--secondary:hover { background-color: var(--color-primary-soft); border-color: var(--color-primary-dark); }
+
+.btn--dark { background-color: var(--color-primary-dark); color: #FFFFFF; }
+.btn--dark:hover { background-color: var(--color-primary-dark-hover); }
+
+.btn--danger { background-color: var(--color-danger); color: #FFFFFF; }
+.btn--danger:hover { background-color: var(--color-danger-hover); }
+
+.btn--ghost { background-color: transparent; color: var(--color-primary-dark); }
+.btn--ghost:hover { background-color: var(--color-primary-soft); }
+
+.btn--sm { min-height: 34px; padding: 0 var(--space-3); font-size: var(--text-xs); }
+.btn--lg { min-height: 50px; padding: 0 var(--space-6); font-size: var(--text-base); }
+.btn--block { display: flex; width: 100%; }
+.btn--icon { width: 42px; padding: 0; }
+.btn--icon.btn--sm { width: 34px; }
+
+/* --- Formularios --- */
+.form-group { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.form-group + .form-group,
+.form-group + .form-row,
+.form-row + .form-group,
+.form-row + .form-row {
+  margin-top: var(--space-4);
+}
+
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); }
+.form-row:first-child { margin-top: 0; }
+
+.form-label { font-size: var(--text-sm); font-weight: 600; color: var(--color-primary-dark); }
+.form-control {
+  width: 100%;
+  min-height: 42px;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-primary-dark);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.form-control::placeholder { color: var(--color-text-secondary); }
+.form-control:hover { border-color: var(--color-primary-dark); }
+.form-control:focus { outline: none; border-color: var(--color-accent); box-shadow: var(--focus-ring); }
+.form-control--mono { font-family: var(--font-mono); }
+textarea.form-control { min-height: 96px; }
+.form-control.is-invalid { border-color: var(--color-danger); }
+.form-control.is-invalid:focus { box-shadow: 0 0 0 3px var(--color-danger-soft); }
+.form-hint { font-size: var(--text-xs); color: var(--color-text-secondary); }
+.form-error { font-size: var(--text-xs); font-weight: 500; color: var(--color-danger); }
+
+/* Inputs de range e radio customizados */
+input[type="range"] { accent-color: var(--color-accent); }
+
+.segmented { display: inline-flex; padding: 4px; gap: 4px; background-color: var(--color-primary-soft); border-radius: var(--radius-pill); }
+.segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented label { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-weight: 600; color: var(--color-primary-dark); border-radius: var(--radius-pill); cursor: pointer; transition: background-color var(--transition-fast); }
+.segmented input:checked + label { background-color: var(--color-accent); color: var(--color-primary-dark); }
+
+/* --- Tabelas --- */
+.table-wrapper { width: 100%; overflow-x: auto; border-radius: var(--radius-lg); -webkit-overflow-scrolling: touch; }
+.card--flush .table-wrapper { border-radius: 0; }
+
+.table { min-width: 640px; font-size: var(--text-sm); background-color: var(--color-surface); }
+.table thead th { padding: var(--space-3) var(--space-4); font-size: var(--text-sm); font-weight: 600; white-space: nowrap; color: #FFFFFF; background-color: var(--color-primary-dark); }
+.table thead th:first-child { border-top-left-radius: var(--radius-md); }
+.table thead th:last-child { border-top-right-radius: var(--radius-md); }
+.card--flush .table thead th:first-child, .card--flush .table thead th:last-child { border-radius: 0; }
+.table tbody td { padding: var(--space-3) var(--space-4); color: var(--color-primary-dark); vertical-align: middle; border-bottom: 1px solid var(--color-border); }
+.table tbody tr:last-child td { border-bottom: 0; }
+.table tbody tr { transition: background-color var(--transition-fast); }
+.table tbody tr:hover { background-color: var(--color-primary-soft); }
+
+.table .num, .table td.num, .table th.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.table thead th.num { font-family: var(--font-body); }
+.table td.actions { text-align: right; white-space: nowrap; }
+.table-empty { padding: var(--space-7) var(--space-4); text-align: center; color: var(--color-text-secondary); }
+
+/* --- Badges (aquelas etiquetas de status) --- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-neutral-soft);
+  color: var(--color-text-secondary);
+}
+
+.badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; }
+.badge--success { background-color: var(--color-success-soft); color: var(--color-success-text); }
+.badge--warning { background-color: var(--color-warning-soft); color: var(--color-warning-text); }
+.badge--danger { background-color: var(--color-danger-soft); color: var(--color-danger-text); }
+.badge--info { background-color: var(--color-info-soft); color: var(--color-info-text); }
+.badge--neutral { background-color: var(--color-neutral-soft); color: var(--color-text-secondary); }
+.badge--plain::before { display: none; }
+
+/* --- Graficos --- */
+.chart-container { position: relative; width: 100%; height: 320px; }
+.chart-container canvas { max-height: 100%; }
+.chart-container--sm { height: 240px; }
+.chart-container--lg { height: 420px; }
+
+/* --- Modais (janelas que abrem por cima) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background-color: rgba(15, 23, 42, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.modal-overlay.is-open { opacity: 1; visibility: visible; }
+
+/* Fundo escuro do menu lateral no celular: cinza em vez de verde */
+.sidebar-overlay { background-color: rgba(15, 23, 42, 0.5); }
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - var(--space-6));
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(16px);
+  transition: transform var(--transition-base);
+}
+
+.modal-overlay.is-open .modal { transform: translateY(0); }
+.modal--lg { max-width: 760px; }
+.modal--sm { max-width: 400px; }
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-shrink: 0;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal__title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; color: var(--color-primary-dark); }
+.modal__close { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; font-size: var(--text-xl); line-height: 1; color: var(--color-text-secondary); border-radius: var(--radius-md); transition: background-color var(--transition-fast), color var(--transition-fast); }
+.modal__close:hover { background-color: var(--color-primary-soft); color: var(--color-primary-dark); }
+
+.modal__body { flex: 1; padding: var(--space-5); overflow-y: auto; }
+
+.modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  flex-shrink: 0;
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.modal--danger .modal__header { border-bottom-color: var(--color-danger); }
+
+@media (max-width: 640px) {
+  .modal-overlay { align-items: flex-end; padding: 0; }
+  .modal { max-width: 100%; max-height: 92vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .modal__footer { flex-direction: column-reverse; border-radius: 0; }
+  .modal__footer .btn { width: 100%; }
+  .card { padding: var(--space-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal, .modal-overlay { transition: none; }
+}
+
+/* Rodapé */
+.site-footer {
+  margin-top: 40px;
+  padding: 24px 0;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.site-footer strong {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+}
+
+/* Botoes secundarios e fantasma: sem borda e com fundo cinza claro (modo claro) */
+.btn--secondary {
+  border-color: transparent;
+  background-color: #F1F5F9;
+}
+.btn--secondary:hover {
+  border-color: transparent;
+  background-color: #E2E8F0;
+}
+.btn--ghost {
+  background-color: #F1F5F9;
+}
+.btn--ghost:hover {
+  background-color: #E2E8F0;
+}
+
+/* 1. TEMA ESCURO GERAL */
+body.dark-mode {
+  --egator-bg: #121212;
+  --egator-card-bg: #1E1E1E;
+  --egator-text-dark: #E2E8F0;
+  --egator-text-muted: #94A3B8;
+  --color-bg: #121212;
+  --color-surface: #1E1E1E;
+  --color-text: #E2E8F0;
+  --color-heading: #FFFFFF;
+}
+
+/* Força os cards, header, sidebar e inputs a ficarem escuros */
+body.dark-mode .egator-card,
+body.dark-mode .stat-card-egator,
+body.dark-mode .sidebar,
+body.dark-mode .header,
+body.dark-mode .dropdown,
+body.dark-mode .login-card,
+body.dark-mode .search .form-control,
+body.dark-mode .form-control {
+  background-color: var(--egator-card-bg) !important;
+  border-color: #333 !important;
+  color: var(--egator-text-dark) !important;
+}
+
+/* Tira o verde neon dos títulos no modo escuro */
+body.dark-mode .egator-card-title,
+body.dark-mode .page-header h1,
+body.dark-mode #user-name,
+body.dark-mode .stat-info .value {
+  color: #FFFFFF !important;
+}
+
+/* Tabelas no modo escuro */
+body.dark-mode .table-egator th,
+body.dark-mode .table-egator td {
+  border-bottom-color: #333 !important;
+  color: var(--egator-text-dark) !important;
+}
+
+/* Linha da tabela ao passar o mouse (antes ficava clara e o texto sumia) */
+body.dark-mode .table-egator tr:hover,
+body.dark-mode .table-egator tr:hover td {
+  background-color: #2A2A2A !important;
+}
+
+/* Linha selecionada na tela de Cenarios */
+body.dark-mode .table-egator tbody tr[style*="F1F5F9"],
+body.dark-mode .table-egator tbody tr[style*="F1F5F9"] td {
+  background-color: #2A2A2A !important;
+}
+
+/* Menu do usuario (Configuracoes / Sair) ao passar o mouse */
+body.dark-mode .dropdown__item:hover {
+  background-color: #2A2A2A !important;
+}
+
+/* Botoes secundarios (Editar, Cancelar, + Entrada...) sem borda clara */
+body.dark-mode .btn--secondary {
+  border-color: transparent;
+  background-color: #2A2A2A;
+}
+body.dark-mode .btn--secondary:hover {
+  border-color: transparent;
+  background-color: #333333;
+}
+
+/* Botoes "fantasma" (! Perda, Excluir) com o mesmo fundo dos outros */
+body.dark-mode .btn--ghost {
+  background-color: #2A2A2A;
+}
+body.dark-mode .btn--ghost:hover {
+  background-color: #333333;
+}
+
+/* Botoes fantasma (Excluir, ! Perda) com fundo igual aos outros botoes */
+body.dark-mode .btn--ghost {
+  background-color: #2A2A2A;
+}
+body.dark-mode .btn--ghost:hover {
+  background-color: #333333;
+}
+body.dark-mode .btn-excluir:hover,
+body.dark-mode .btn-perda:hover {
+  background-color: var(--color-danger-soft);
+}
+
+/* Simulador: botoes de metodo (Analitico / Euler / RK4 / Comparar) */
+body.dark-mode .segmento input:not(:checked) + span {
+  background-color: #2A2A2A;
+  border-color: #444;
+}
+body.dark-mode .segmento:hover input:not(:checked) + span {
+  background-color: #333333;
+}
+
+/* Simulador: linhas e bordas claras demais */
+body.dark-mode .diag__metricas {
+  border-top-color: #333;
+}
+body.dark-mode .grafico-aviso {
+  border-color: #444;
+}
+
+/* Estoque: caixa com o nome do produto dentro do modal de movimentacao */
+body.dark-mode .modal-info {
+  background-color: #2A2A2A !important;
+  border-color: #444 !important;
+}
+
+/* 2. Sobreposição */
+@media (max-width: 1024px) {
+  /* O Header fica pra trás */
+  .header {
+    z-index: 100 !important; 
+  }
+  
+  /* O Overlay fica no meio */
+  .sidebar-overlay {
+    z-index: 200 !important;
+    background-color: rgba(0, 0, 0, 0.6) !important; /* Fundo escuro igual EGATOR */
+  }
+  
+  /* A Sidebar fica na frente de tudo */
+  .sidebar {
+    z-index: 300 !important;
+    background-color: var(--egator-card-bg) !important;
+    padding-top: 10px !important; /* Dá um respiro pra logo */
+  }
+
+  /* Ajusta a logo no celular pra ela não ficar embaixo da busca */
+  .sidebar__brand {
+    border-bottom: none !important;
+    margin-bottom: 20px !important;
+  }
+}
+
+/* Tabelas e Gráficos*/
+
+@media (max-width: 1024px) {
+  /* 1. Evita que a página inteira role para os lados (aquele "vazamento") */
+  body, .main-content {
+    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  /* 2. Força os cards a respeitarem o tamanho da tela do celular */
+  .egator-card, .card, .stat-card-egator {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 3. Cria a rolagem horizontal APENAS dentro do card da tabela */
+  .table-wrapper, 
+  .egator-card > div[style*="overflow-x"] {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100% !important;
+    display: block !important;
+  }
+  
+  /* Garante que a tabela não amasse as colunas */
+  .table-egator, .table {
+    min-width: 650px !important; 
+  }
+
+  /* 4. Correção do Gráfico Gigante (Imagem 7) */
+  .chart-container-egator, 
+  .chart-container, 
+  .grafico-caixa,
+  #grafico-estoque,
+  #grafico-perdas,
+  #grafico-cenarios {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 300px !important; /* Trava a altura do gráfico no celular */
+    max-height: 300px !important;
+    overflow: hidden !important;
+    position: relative;
+  }
+  
+  canvas {
+    max-width: 100% !important;
+  }
+}
+
+/* Colunas Fixas na Tabela */
+
+@media (max-width: 1024px) {
+  /* Deixa a tabela com rolagem suave */
+  .table-egator, .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* 1. Congela a PRIMEIRA coluna (Nome/Data) */
+  .table-egator th:first-child,
+  .table-egator td:first-child,
+  .table th:first-child,
+  .table td:first-child {
+    position: sticky !important;
+    left: 0 !important;
+    background-color: var(--egator-card-bg, #FFFFFF) !important;
+    z-index: 2;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05); /* Sombrinha pra separar */
+  }
+
+  /* 2. Congela a ÚLTIMA coluna (Ações) */
+  .table-egator th:last-child,
+  .table-egator td:last-child,
+  .table th:last-child,
+  .table td:last-child {
+    position: sticky !important;
+    right: 0 !important;
+    background-color: var(--egator-card-bg, #FFFFFF) !important;
+    z-index: 2;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05); /* Sombrinha pra separar */
+  }
+
+  /* Ajuste para o Tema Escuro não bugar as colunas fixas */
+  body.dark-mode .table-egator th:first-child,
+  body.dark-mode .table-egator td:first-child,
+  body.dark-mode .table-egator th:last-child,
+  body.dark-mode .table-egator td:last-child {
+    background-color: var(--color-surface) !important;
+  }
+}
